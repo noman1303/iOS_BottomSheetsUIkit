@@ -1,29 +1,39 @@
-📱 BottomSheetsUIKit
+# 📱 BottomSheetsUIKit
 
-A UIKit-based iOS project demonstrating all common bottom sheet patterns used in real-world applications — implemented using modern UISheetPresentationController and programmatic UI (no Storyboard for sheet layouts).
+A comprehensive UIKit-based iOS project demonstrating all common bottom sheet patterns using modern `UISheetPresentationController` and programmatic UI. Built with clean architecture, reusable components, and no storyboard dependencies for sheet layouts.
 
-This project mirrors SwiftUI-style sheets but is built entirely with UIKit, following clean architecture and reusable helpers.
+![Swift](https://img.shields.io/badge/Swift-5.9-orange.svg)
+![Platform](https://img.shields.io/badge/Platform-iOS%2015.0+-lightgrey.svg)
+![UIKit](https://img.shields.io/badge/UIKit-Framework-blue.svg)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
 
-⸻
+---
 
-🚀 Features
-    •    ✅ Uses UIKit + UISheetPresentationController
-    •    ✅ Covers all common bottom sheet use cases
-    •    ✅ Each sheet has its own ViewController
-    •    ✅ Reusable UI helper methods
-    •    ✅ iOS 15+ bottom sheet support
-    •    ✅ Clean, scalable architecture
-    •    ✅ No storyboard IDs for sheets (safe & crash-free)
+## 🎯 Project Overview
 
-⸻
+This project mirrors SwiftUI-style bottom sheets but is built entirely with UIKit, showcasing modern iOS development patterns with `UISheetPresentationController` (iOS 15+).
 
-📂 Project Structure
+### Key Features
 
-BottomSheetsUIKit
+- ✅ Modern `UISheetPresentationController` API
+- ✅ Programmatic UI (no Interface Builder for sheets)
+- ✅ 11+ bottom sheet implementations
+- ✅ Clean, scalable architecture
+- ✅ Reusable UI helper methods
+- ✅ Type-safe presentation (no string identifiers)
+- ✅ Production-ready code patterns
+
+---
+
+## 📂 Project Structure
+
+```
+BottomSheetsUIKit/
+├── AppDelegate.swift
+├── SceneDelegate.swift
+├── ViewController.swift              // Main screen with buttons
 │
-├── ViewController.swift        // Main screen with buttons
-│
-├── Sheets/                     // All bottom sheet controllers
+├── Sheets/                           // Bottom sheet view controllers
 │   ├── OptionsSheetViewController.swift
 │   ├── FormSheetViewController.swift
 │   ├── FilterSheetViewController.swift
@@ -36,129 +46,301 @@ BottomSheetsUIKit
 │   ├── DatePickerSheetViewController.swift
 │   └── ListSelectionSheetViewController.swift
 │
-└── Assets / Storyboard (only for main buttons)
+└── Resources/
+    ├── Assets.xcassets
+    └── Main.storyboard               // Only for main navigation
+```
 
+---
 
-⸻
+## 📋 Implemented Bottom Sheets
 
-📋 Implemented Bottom Sheets
+### Core Sheets (5)
 
-Original Sheets
-    •    Options Sheet – OK / Cancel actions
-    •    Form Sheet – Add User (Name & Email)
-    •    Filter Sheet – Toggle + Slider filters
-    •    Quick Actions Sheet – Share, Save, Delete
-    •    Date Picker Sheet – UIDatePicker in bottom sheet
+| # | Sheet Name | Description | Key Components |
+|---|------------|-------------|----------------|
+| 1 | **OptionsSheet** | OK / Cancel confirmation | UIButton, UIStackView |
+| 2 | **FormSheet** | User input form | UITextField, UIButton |
+| 3 | **FilterSheet** | Toggle & slider filters | UISwitch, UISlider |
+| 4 | **QuickActionSheet** | Fast actions menu | UIButton, UIStackView |
+| 5 | **DatePickerSheet** | Date/time selection | UIDatePicker |
 
-Extended Sheets
-    •    Settings Sheet – Toggle-based preferences
-    •    Share Sheet – Share options list
-    •    Sort Sheet – Sorting selection
-    •    Picker Sheet – Segmented + Picker view
-    •    Feedback Sheet – Text feedback submission
-    •    List Selection Sheet – Multiple selectable items
+### Extended Sheets (6)
 
-⸻
+| # | Sheet Name | Description | Key Components |
+|---|------------|-------------|----------------|
+| 6 | **SettingsSheet** | App preferences | UISwitch, UITableView |
+| 7 | **ShareSheet** | Share options | UITableView, Icons |
+| 8 | **SortSheet** | Sort selection | UITableView, Checkmarks |
+| 9 | **PickerSheet** | Segmented & wheel pickers | UISegmentedControl, UIPickerView |
+| 10 | **FeedbackSheet** | User feedback form | UITextView, UIButton |
+| 11 | **ListSelectionSheet** | Multi-select list | UITableView, Checkboxes |
 
-🧠 How It Works (Core Concept)
+---
 
-1️⃣ One Sheet = One ViewController
+## 🧠 How It Works
 
-Each bottom sheet is implemented as its own UIViewController.
+### 1. One Sheet = One ViewController
 
-final class SettingsSheetViewController: ViewController {
+Each bottom sheet is implemented as its own `UIViewController`, following single responsibility principle.
+
+```swift
+final class SettingsSheetViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         applyBottomSheetStyle()
     }
 }
+```
 
-This mirrors SwiftUI’s:
-
+**SwiftUI Equivalent:**
+```swift
 .sheet {
     SettingsSheetView()
 }
+```
 
+---
 
-⸻
+### 2. Presenting Bottom Sheets
 
-2️⃣ Presenting a Bottom Sheet
+Sheets are presented directly with type-safe initialization:
 
-Sheets are presented directly from the main ViewController:
-
+```swift
 @IBAction func openSettings(_ sender: UIButton) {
-    let vc = SettingsSheetViewController()
-    present(vc, animated: true)
+    let settingsVC = SettingsSheetViewController()
+    present(settingsVC, animated: true)
 }
+```
 
-❌ No generic presenter
-❌ No storyboard identifiers
-✅ Each button opens its own sheet
+**Benefits:**
+- ❌ No string-based lookups
+- ✅ Compile-time safety
+- ✅ Easy to maintain
 
-⸻
+---
 
-3️⃣ Bottom Sheet Configuration (Reusable)
+### 3. Reusable Sheet Configuration
 
-All bottom sheet styling is centralized in one helper method inside ViewController:
+All bottom sheet styling is centralized using a reusable helper:
 
+```swift
 func applyBottomSheetStyle() {
     modalPresentationStyle = .pageSheet
+    
     if let sheet = sheetPresentationController {
         sheet.detents = [.medium(), .large()]
         sheet.prefersGrabberVisible = true
         sheet.preferredCornerRadius = 20
     }
 }
+```
 
-Each sheet simply calls:
+**Usage in any sheet:**
+```swift
+override func viewDidLoad() {
+    super.viewDidLoad()
+    applyBottomSheetStyle()
+}
+```
 
-applyBottomSheetStyle()
+**Configuration Options:**
+- `.detents` - Sheet height options (medium, large, custom)
+- `.prefersGrabberVisible` - Shows drag indicator
+- `.preferredCornerRadius` - Custom corner radius
+- `.largestUndimmedDetentIdentifier` - Background dimming behavior
 
-✔ Clean
-✔ No duplication
-✔ Easy to change globally
+---
 
-⸻
+### 4. Programmatic UI with Helpers
 
-4️⃣ Programmatic UI (SwiftUI-like)
+All sheet UIs are created programmatically using reusable helper methods:
 
-All sheet UIs are created in code, using reusable helpers:
+#### Helper Methods
 
-Example helpers
+```swift
+// Create styled title label
+func makeTitle(_ text: String) -> UILabel {
+    let label = UILabel()
+    label.text = text
+    label.font = .boldSystemFont(ofSize: 24)
+    label.textAlignment = .center
+    return label
+}
 
-func makeTitle(_ text: String) -> UILabel
-func makeCard(_ views: [UIView]) -> UIView
-func makeRowButton(_ title: String) -> UIButton
-func makeToggleRow(_ title: String) -> UIView
+// Create card container
+func makeCard(_ views: [UIView]) -> UIView {
+    let card = UIView()
+    card.backgroundColor = .systemBackground
+    card.layer.cornerRadius = 12
+    // ... add subviews
+    return card
+}
 
-Example usage
+// Create toggle row
+func makeToggleRow(_ title: String) -> UIView {
+    let row = UIView()
+    let label = UILabel()
+    let toggle = UISwitch()
+    // ... configure and layout
+    return row
+}
 
-let title = makeTitle("Settings")
-let row = makeToggleRow("Notifications")
-let card = makeCard([row])
+// Create styled button
+func makeRowButton(_ title: String) -> UIButton {
+    let button = UIButton(type: .system)
+    button.setTitle(title, for: .normal)
+    button.layer.cornerRadius = 8
+    return button
+}
+```
 
-This mimics SwiftUI’s composition-based UI.
+#### Example Usage
 
-⸻
+```swift
+let titleLabel = makeTitle("Settings")
+let toggleRow = makeToggleRow("Notifications")
+let buttonRow = makeRowButton("Save")
+let card = makeCard([titleLabel, toggleRow, buttonRow])
+```
 
-📅 DatePicker Sheet – UIKit Limitation Explained
+**Benefits:**
+- ✅ Consistent styling across sheets
+- ✅ Composable UI components 
+- ✅ Easy to modify globally
 
-SwiftUI provides a graphical calendar-style DatePicker.
+---
 
-UIKit does not have a public equivalent.
+## 🗓 DatePicker Implementation Note
 
-So this project uses:
+### UIKit Limitation
 
-UIDatePicker()
+**SwiftUI** provides a beautiful graphical calendar-style `DatePicker`:
+```swift
+DatePicker("Select Date", selection: $date)
+    .datePickerStyle(.graphical)
+```
+
+**UIKit** does not have a public equivalent of the graphical calendar style.
+
+### Solution
+
+This project uses `UIDatePicker` with wheel style for maximum compatibility:
+
+```swift
+let picker = UIDatePicker()
 picker.preferredDatePickerStyle = .wheels
+picker.datePickerMode = .dateAndTime
+```
 
-To ensure:
-    •    ✅ Compatibility across SDKs
-    •    ✅ No compile-time errors
-    •    ✅ Stable behavior inside bottom sheets
+**Minimum height constraint** prevents clipping:
+```swift
+card.heightAnchor.constraint(greaterThanOrEqualToConstant: 260).isActive = true
+```
 
-A minimum height constraint is added to avoid clipping:
+**Why not `.inline`?**
+- ⚠️ `.inline` style may not render correctly inside bottom sheets on all iOS versions
+- ⚠️ Can cause layout issues with dynamic height
+- ✅ `.wheels` provides consistent, predictable behavior
 
-card.heightAnchor.constraint(greaterThanOrEqualToConstant: 260)
+---
+
+## 🎨 UI Architecture
+
+### Design Pattern: Programmatic Composition
+
+```swift
+override func viewDidLoad() {
+    super.viewDidLoad()
+    applyBottomSheetStyle()
+    
+    // 1. Create components
+    let title = makeTitle("Filter Options")
+    let priceSlider = makePriceSlider()
+    let toggleRow = makeToggleRow("Available Only")
+    
+    // 2. Compose into container
+    let card = makeCard([title, priceSlider, toggleRow])
+    
+    // 3. Add to view hierarchy
+    view.addSubview(card)
+    
+    // 4. Apply constraints
+    setupConstraints()
+}
+```
+
+This mirrors SwiftUI's composition model while staying in UIKit.
+
+---
+
+## 🚀 Getting Started
+
+### Requirements
+
+- **Xcode:** 14.0+
+- **iOS:** 15.0+
+- **Swift:** 5.9+
+- **UIKit:** Native framework
+ 
+---
+
+## 💡 Key UIKit Concepts Demonstrated
+
+### UISheetPresentationController (iOS 15+)
+
+Modern API for bottom sheets with native iOS behavior:
+
+```swift
+if let sheet = sheetPresentationController {
+    // Multiple height options
+    sheet.detents = [.medium(), .large()]
+    
+    // Custom heights (iOS 16+)
+    sheet.detents = [
+        .custom { context in
+            return 300
+        }
+    ]
+    
+    // Drag indicator
+    sheet.prefersGrabberVisible = true
+    
+    // Corner radius
+    sheet.preferredCornerRadius = 20
+    
+    // Dismiss on drag
+    sheet.prefersEdgeAttachedInCompactHeight = true
+}
+```
+
+### Programmatic Auto Layout
+
+```swift
+// Modern constraint activation
+NSLayoutConstraint.activate([
+    card.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+    card.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+    card.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+    card.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+])
+```
+
+### Delegation Pattern
+
+```swift
+protocol FilterSheetDelegate: AnyObject {
+    func didApplyFilters(price: Double, availableOnly: Bool)
+}
+
+class FilterSheetViewController: UIViewController {
+    weak var delegate: FilterSheetDelegate?
+    
+    @objc func applyTapped() {
+        delegate?.didApplyFilters(price: currentPrice, availableOnly: isAvailable)
+        dismiss(animated: true)
+    }
+}
+```
  
